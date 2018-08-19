@@ -15,7 +15,7 @@ class ControllerUser
     public function regUser()
     {
         $model = new User();
-        $model->setLogin("pacanka");
+        $model->setLogin("pacankaloh");
         $model->setPassword("pacan123");
         $model->setName("pacanchik");
         StorageUser::regUser($model);

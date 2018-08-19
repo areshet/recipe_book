@@ -17,20 +17,23 @@ class Dbconnect
         return $connect;
     }
 
-    public static function query($query){
-        $query = pg_query(Dbconnect::connect(),$query);
+    public static function query($query)
+    {
+        $query = pg_query(Dbconnect::connect(), $query);
         $result = pg_fetch_all($query);
+
         return $result;
     }
 
-    public static function dbquery( $query)
+    public static function dbqueryCursor($query)
     {
         pg_query(Dbconnect::connect(), "BEGIN;");
-        $tr = pg_query(Dbconnect::connect(), $query);
-        $r = pg_fetch_row($tr);
-        $name = $r[0];
-        $rs = pg_query(Dbconnect::connect(), "FETCH ALL IN \"" . $name . "\";");
+        $query = pg_query(Dbconnect::connect(), $query);
+        $row = pg_fetch_row($query);
+        $name = $row[0];
+        $result = pg_query(Dbconnect::connect(), "FETCH ALL IN \"" . $name . "\";");
         pg_query(Dbconnect::connect(), "END;");
-        return $rs;
+
+        return $result;
     }
 }

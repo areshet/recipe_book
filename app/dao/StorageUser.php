@@ -8,7 +8,7 @@ class StorageUser
     public static function getUser($token)
     {
         $sql = "SELECT \"users\".get_user('$token')";
-        $query = Dbconnect::dbquery($sql);
+        $query = Dbconnect::dbqueryCursor($sql);
         while ($row = pg_fetch_assoc($query)) {
             print_r(json_encode($row));
         }
@@ -17,7 +17,7 @@ class StorageUser
     public static function regUser($modl)
     {
         $login = $modl->getLogin();
-        $password = $modl->getPassword();
+        $password = hash('sha256', $modl->getPassword());
         $name = $modl->getName();
         $sql = "SELECT \"users\".save_user('$login', '$password', '$name')";
         $result = Dbconnect::query($sql);
@@ -27,9 +27,8 @@ class StorageUser
     public static function authUser($model)
     {
         $expire = round(microtime(true) * 1000) + User::$date;
-        echo $expire;
         $seconds = $expire / 1000;
-        echo $end_date = date("Y-m-d H:i:s", $seconds);
+        $end_date = date("Y-m-d H:i:s", $seconds);
         $login = $model->getLogin();
         $password = $model->getPassword();
         $sql = "SELECT \"users\".auth_user('$login', '$password', '$end_date')";
