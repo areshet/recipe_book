@@ -8,48 +8,70 @@ class StorageRecipe
     {
         $sql = "SELECT \"recipe\".get_my_recipe('$token')";
         $result = Dbconnect::dbqueryCursor($sql);
-        while ($row = pg_fetch_assoc($result)) {
-            echo "<pre>";
-            print_r(json_encode($row, JSON_UNESCAPED_UNICODE));
-        }
+        return $row = pg_fetch_all($result);
     }
 
 
-    public static function save($model,$token) {
+    public static function save($model, $token)
+    {
         $id = $model->getId() === null ? 'null' : $model->getId();
         $title = $model->getTitle();
         $desc = $model->getDescription();
         $alg = $model->getAlgorithm();
         $img = $model->getImage();
-        $sql = "SELECT \"recipe\".save_recipe($id,'$token','$title','$desc','$alg','$img')";
+        $ingr = Dbconnect::to_pg_array($model->getIngredients());
+        $sql = "SELECT \"recipe\".save_recipe($id,'$token','$title','$desc','$alg','$img','$ingr')";
         $result = Dbconnect::query($sql);
-        print_r(json_encode($result));
+        return $result[0]['save_recipe'];
 
     }
-    public static function getList($token) {
+
+
+    public static function getList($token)
+    {
         $sql = "SELECT \"recipe\".get_all_by_oldest('$token')";
         $result = Dbconnect::dbqueryCursor($sql);
-        while ($row = pg_fetch_assoc($result)) {
-            echo "<pre>";
-            print_r(json_encode($row, JSON_UNESCAPED_UNICODE));
-        }
+        return $row = pg_fetch_all($result);
     }
-    public static function delete($id,$token){
+
+
+    public static function delete($id, $token)
+    {
         $sql = "SELECT \"recipe\".remove($id,'$token')";
-        $result = Dbconnect::query($sql);
-        print_r(json_encode($result));
+        Dbconnect::query($sql);
     }
-    public static function vote($id,$token,$rating){
-        $sql ="SELECT \"recipe\".vote($id,'$token',$rating)";
+
+
+    public static function vote($id, $token, $rating)
+    {
+        $sql = "SELECT \"recipe\".vote($id,'$token', $rating)";
         $result = Dbconnect::query($sql);
-        print_r(json_encode($result));
     }
-    public static function getListRating($token) {
+
+
+    public static function getListRating($token)
+    {
         $sql = "SELECT \"recipe\".get_all_by_rating('$token')";
         $result = Dbconnect::dbqueryCursor($sql);
-        while ($row = pg_fetch_assoc($result)) {
-            echo "<pre>";
-            print_r(json_encode($row, JSON_UNESCAPED_UNICODE));
+        return $row = pg_fetch_all($result);
+    }
+
+    public static function getCategoryList($id, $token)
+    {
+        $sql = "SELECT \"recipe\".get_by_category('$id','$token')";
+        $result = Dbconnect::dbqueryCursor($sql);
+        return $row = pg_fetch_all($result);
+    }
+
+    public static function search($token, $arr)
+    {
+        $param = [];
+        foreach ($arr as $value) {
+            array_push($param, '%' . $value . '%');
         }
+        $words = Dbconnect::to_pg_array($param);
+        $sql = "SELECT \"recipe\".search('$token','$words')";
+        $result = Dbconnect::dbqueryCursor($sql);
+        return pg_fetch_all($result);
     }
 }

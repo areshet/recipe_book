@@ -9,6 +9,8 @@ class Recipe
     private $algorithm;
     private $rating;
     private $image;
+    private $ingredients;
+    private $category;
 
     /**
      * @return mixed
@@ -121,5 +123,38 @@ class Recipe
     {
         $this->image = $image;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIngredients()
+    {
+        return $this->ingredients;
+    }
+
+    /**
+     * @param mixed $ingredients
+     */
+    public function setIngredients($ingredients)
+    {
+        $this->ingredients = $ingredients;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
 
 }

@@ -44,7 +44,7 @@ class ControllerUser
         if (empty($token)) die($auth_result);
         $expire = time() + User::$date / 1000;
 
-        setcookie("token", $token, $expire, null, null, null, true);
+        setcookie("token", $token, $expire, '/', null, null, true);
 
         echo json_encode(['auth' => true], JSON_UNESCAPED_UNICODE);
 
