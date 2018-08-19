@@ -27,7 +27,7 @@ class StorageRecipe
 
     }
     public static function getList($token) {
-        $sql = "SELECT \"recipe\".get_all('$token')";
+        $sql = "SELECT \"recipe\".get_all_by_oldest('$token')";
         $result = Dbconnect::dbqueryCursor($sql);
         while ($row = pg_fetch_assoc($result)) {
             echo "<pre>";
@@ -43,5 +43,13 @@ class StorageRecipe
         $sql ="SELECT \"recipe\".vote($id,'$token',$rating)";
         $result = Dbconnect::query($sql);
         print_r(json_encode($result));
+    }
+    public static function getListRating($token) {
+        $sql = "SELECT \"recipe\".get_all_by_rating('$token')";
+        $result = Dbconnect::dbqueryCursor($sql);
+        while ($row = pg_fetch_assoc($result)) {
+            echo "<pre>";
+            print_r(json_encode($row, JSON_UNESCAPED_UNICODE));
+        }
     }
 }
