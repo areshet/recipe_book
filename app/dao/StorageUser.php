@@ -8,10 +8,9 @@ class StorageUser
     public static function getUser($token)
     {
         $sql = "SELECT \"users\".get_user('$token')";
-        $query = Dbconnect::dbqueryCursor($sql);
-        while ($row = pg_fetch_assoc($query)) {
-            print_r(json_encode($row));
-        }
+        $result = Dbconnect::dbqueryCursor($sql);
+        $row = pg_fetch_assoc($result);
+        return $row;
     }
 
     public static function regUser($modl)
@@ -21,7 +20,7 @@ class StorageUser
         $name = $modl->getName();
         $sql = "SELECT \"users\".save_user('$login', '$password', '$name')";
         $result = Dbconnect::query($sql);
-        print_r(json_encode($result));
+        return $result[0]['save_user'];
     }
 
     public static function authUser($model)
@@ -33,7 +32,8 @@ class StorageUser
         $password = $model->getPassword();
         $sql = "SELECT \"users\".auth_user('$login', '$password', '$end_date')";
         $result = Dbconnect::query($sql);
-        print_r(json_encode($result));
+        $token = $result[0]['auth_user'];
+        return $token;
     }
 
 
