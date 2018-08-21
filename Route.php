@@ -4,12 +4,15 @@ Class Route
 {
     static function start()
     {
-
         $routes = explode('/', $_SERVER['REQUEST_URI']);
 
-        if (!empty($routes[1]) && !empty($routes[2])) {
-            $controller_name = strtolower($routes[1]);
-            $method = strtolower($routes[2]);
+        if ($routes[1] != 'webapi') return;
+
+        $_SERVER['REQUEST_METHOD'] != 'POST' ? Route::error():null;
+
+        if (!empty($routes[2]) && !empty($routes[3])) {
+            $controller_name = strtolower($routes[2]);
+            $method = strtolower($routes[3]);
 
             $controller_name = 'Controller' . ucfirst($controller_name);
 
